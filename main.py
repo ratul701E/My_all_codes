@@ -46,6 +46,7 @@ def ignored(box, req):
 class Boogeywoman:
     def __init__(self):
         pass
+    name = ''
 
     #       functions
     def talk(self, messege, isPrint=1):
@@ -55,14 +56,14 @@ class Boogeywoman:
         boogey_talk.runAndWait()
 
     def introduceBoogeywoman(self):
-        self.talk("hi i am boogeywoman . I am created by some lazy fuckers  . By the way ,How can i help you , don't be shy", isPrint=False)
+        self.talk("hi i am boogeywoman . I am created by some lazy students  . By the way ,How can i help you , don't be shy", isPrint=False)
 
     def take_req(self,listen = 1):
         try:
             with SR.Microphone() as mic:
                 # print("say what you want . . . ")
                 if listen:
-                    self.talk('listening you.....')
+                    self.talk('listening .....')
                 voice_command = boogey.listen(mic)
                 user_command = boogey.recognize_google(voice_command)
                 user_command = user_command.lower()
@@ -116,21 +117,23 @@ class Boogeywoman:
             tempReq = boogeywoman.take_req(0)
             if tempReq == 'bad read':
                 print('..bad read..')
-            if isExist(['hero','hello'],tempReq) :
+            if isExist(['hero','hello','hi' , 'hai', 'hay'],tempReq) :
                 return
     def sayIam(self,sen):
         sen = replaceBy(['say','you are'],['','i am'],sen)
         self.talk(sen)
 
     def askName(self):
-        self.talk("what is your name")
-        self.take_req()
+        self.talk("what is your name....")
+        name = self.take_req(listen=False)
+        name = ignored(['my','name','is','i','am'],name)
+        return  name
 
 
 #   driver code
 
 boogeywoman = Boogeywoman()
-#boogeywoman.introduceBoogeywoman()
+boogeywoman.introduceBoogeywoman()
 
 while True:
 
@@ -138,7 +141,7 @@ while True:
 
     if request == 'bad read':
 
-        boogeywoman.talk("You need to talk to execute commands . say exit or leave to exit and say hero to active me . thanks")
+        boogeywoman.talk("You need to talk to execute commands . say exit or leave to exit and say hello to active me . thanks")
 
     elif 'time' in request:
 
@@ -160,6 +163,7 @@ while True:
     elif isExist(['play'], request):
 
         boogeywoman.playIt(request)
+        boogeywoman.waitForcOmmand()
 
     elif isExist(['tell me about', 'about', 'who is'],request):
 
@@ -172,13 +176,15 @@ while True:
     elif isExist(['current temperature','temperature','weather'],request):
 
         boogeywoman.crrTemp(request)
+        boogeywoman.waitForcOmmand()
 
     elif isExist(['tell me a joke','joke','jokes','say a joke'],request):
 
         boogeywoman.tellJoke()
 
     elif isExist(['hi', 'hey', "what's app", "what's up", 'whassup', 'hai', 'hay','hello'],request):
-        boogeywoman.talk("hey there , DEMO")
+        name = boogeywoman.askName()
+        boogeywoman.talk("hey there , " + name)
 
     elif isExist(['f*** you','f***'],request):
         boogeywoman.talk('fuck you too')
@@ -192,5 +198,5 @@ while True:
         boogeywoman.search(request)
 
     #time.sleep(1.5)
-    boogeywoman.waitForcOmmand()
+    #boogeywoman.waitForcOmmand()
 
